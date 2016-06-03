@@ -1,17 +1,47 @@
-run <- function(set_size, sample_size, n, r, min, max) {
-  data <- set_generation(set_size, n, min, max)
-  poisson_disc(n, sample_size, data, r, min, max)
+run <- function(sample_size, n, r, min, max) {
+  poisson_disc(n, sample_size, r, min, max)
 }
 
-poisson_disc <- function(n, sample_size, set, r, min, max, k=30){
-  set_size <- length(set[1,])
-  x0_index <- sample(1:set_size, 1)
-  x0 <- set[,x0_index]
+poisson_disc <- function(n, sample_size, r, min, max, k=30){
+  x0 <- runif(n, min, max)
   active <- x0
-  new_point_list <- x0
-  k_points <- generate_for_sphere(k, x0, r, n, min, max)
-  
-  new_point_list <- c(new_point_list,k_points)
+  active_list <- list()
+  active_list[[1]] <- active
+  new_point_list <- list()
+  new_point_list[[1]] <- x0
+  while ((length(new_point_list)<(sample_size + 1)) & (length(active_list)>0)){
+    active <- active_list[[length(active_list)]]
+    k_points <- generate_for_sphere(k, active, r, n, min, max)
+    active_list <- c(active_list,k_points)
+    
+    added <- 0
+    for(j in (1:length(k_points))) {
+      c <- k_points[[j]]
+      valid <- TRUE
+      for (i in (1:length(new_point_list))){
+        x <- new_point_list[[i]]
+        if (!(r^2 < sum((x-c)^2))){
+          valid <-FALSE
+        }
+      }
+      if (valid){
+        new_point_list[[length(new_point_list)+1]] <- c
+        added <- added+1
+      }
+      if (added == 0){
+        temp_active_list <- list()
+        index_correct = 0
+        for (k in (1:length(active_list))){
+          if (!(active_list[[k]] == active)){
+            temp_active_list[[k+index_correct]] <- active_list[[k]]
+          }
+          else
+            index_correct=1
+        }
+        active_list <- temp_active_list
+      }
+    }
+  }
   return(new_point_list)
 }
 
