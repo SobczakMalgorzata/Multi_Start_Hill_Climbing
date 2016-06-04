@@ -1,7 +1,3 @@
-run <- function(sample_size, n, r, min, max) {
-  poisson_disc(n, sample_size, r, min, max)
-}
-
 poisson_disc <- function(n, sample_size, r, min, max, k=30){
   x0 <- runif(n, min, max)
   active <- x0
@@ -9,8 +5,7 @@ poisson_disc <- function(n, sample_size, r, min, max, k=30){
   active_list[[1]] <- active
   new_point_list <- list()
   new_point_list[[1]] <- x0
-  list_valid = length(active_list)
-  while ((length(new_point_list)<(sample_size + 1)) ){
+  while ((length(active_list)>0) & (length(new_point_list)<(sample_size + 1))){
     
     active <- active_list[[length(active_list)]]
     list_valid = length(active_list)
@@ -35,16 +30,16 @@ poisson_disc <- function(n, sample_size, r, min, max, k=30){
         temp_active_list <- list()
         index_correct = 0
         for (k in (1:length(active_list))){
-          if (!(active_list[[k]] == active)){
-            temp_active_list[[k+index_correct]] <- active_list[[k]]
+          what =(active_list[[k]] != active)
+          if (sum(what)==length(what)){
+            temp_active_list[[k-index_correct]] <- active_list[[k]]
           }
           else
             index_correct=1
         }
+        active_list <- list()
         active_list <- temp_active_list
-        
       }
-      list_valid = length(active_list)
     }
   }
   return(new_point_list)

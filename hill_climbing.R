@@ -23,12 +23,13 @@ hill_climbing <- function(n, starting_piont, function_number, initial_step_size,
           best = j
         }
       }
-      if (!(candidate[best] == 0)) {
+      if (candidate[best] != 0) {
         current_point[i] = current_point[i] + step_size[i] * candidate[[best]];
         step_size[i] = step_size[i] * candidate[[best]]
       }
     }
-    if ((cec2013(function_number, current_point) - before) < epsilon){
+    condition <- (cec2013(function_number, current_point) - before)
+    if ((condition < epsilon) | ((cec2013(function_number, current_point)==Inf) & (before == Inf))){
       return(current_point)
     }
     index <- index + 1
