@@ -2,7 +2,7 @@ hypercube_generation <- function(set_size, n, start_point, cube_size, min=-1000,
   all_elems <- set_size*n
   mat <- matrix(nrow=set_size,ncol = n)
   for(i in (1:set_size)){
-    mat[i,] <- start_point - (sample(max,n)* cube_size)
+    mat[i,] <- start_point + (sample((min:max),n)* cube_size)
   }
   return(mat)
 }
