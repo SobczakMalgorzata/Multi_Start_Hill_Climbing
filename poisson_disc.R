@@ -9,8 +9,11 @@ poisson_disc <- function(n, sample_size, r, min, max, k=30){
   active_list[[1]] <- active
   new_point_list <- list()
   new_point_list[[1]] <- x0
-  while ((length(new_point_list)<(sample_size + 1)) & (length(active_list)>0)){
+  list_valid = length(active_list)
+  while ((length(new_point_list)<(sample_size + 1)) ){
+    
     active <- active_list[[length(active_list)]]
+    list_valid = length(active_list)
     k_points <- generate_for_sphere(k, active, r, n, min, max)
     active_list <- c(active_list,k_points)
     
@@ -39,7 +42,9 @@ poisson_disc <- function(n, sample_size, r, min, max, k=30){
             index_correct=1
         }
         active_list <- temp_active_list
+        
       }
+      list_valid = length(active_list)
     }
   }
   return(new_point_list)
