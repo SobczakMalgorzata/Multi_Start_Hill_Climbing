@@ -9,30 +9,28 @@ hill_climbing <- function(n, starting_piont, function_number, initial_step_size,
   candidate[4] <- 1 / acceleration
   candidate[5] <- acceleration
   index = 0
+  before <- cec2013(function_number, current_point)
   while(index < max_iter){
-    before <- cec2013(function_number, current_point)
+    mat = matrix(current_point, 5*n, n, byrow = T)
+    
     for (i in (1:(length(current_point)))){
-      best <- -1
-      best_score <- -Inf
       for(j in (1:5)) {
-        current_point[i] = current_point[i] + step_size[i] * candidate[[j]]
-        temp = cec2013(function_number,current_point)
-        current_point[i] = current_point[i] - step_size[i] * candidate[[j]]
-        if(temp > best_score) {
-          best_score = temp
-          best = j
-        }
-      }
-      if (candidate[best] != 0) {
-        current_point[i] = current_point[i] + step_size[i] * candidate[[best]];
-        step_size[i] = step_size[i] * candidate[[best]]
+        mat[(i-1)*5+j] = mat[(i-1)+j] + step_size[i] * candidate[[j]]
       }
     }
-    condition <- (cec2013(function_number, current_point) - before)
-    if ((condition < epsilon) | ((cec2013(function_number, current_point)==Inf) & (before == Inf))){
+    scores = cec2013(function_number, mat)
+    
+    max_idx = which.max(scores)
+    current_point = mat[max_idx]
+    best = (max_idx %% 5) + 1
+    step_size[best] = step_size[best] * candidate[[best]]
+    
+    condition <- (scores[max_idx] - before)
+    if ((condition < epsilon) | (scores[max_idx] == Inf) & (before == Inf)){
       return(current_point)
     }
     index <- index + 1
+    before <- current_point
   }
   
   return(current_point)
