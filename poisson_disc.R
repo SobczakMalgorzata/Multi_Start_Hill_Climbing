@@ -48,7 +48,7 @@ poisson_disc <- function(n, sample_size, r, min, max, k=30){
 generate_for_sphere <- function(k,c,r,n, min, max) {
   new_min <- c(min,r)
   new_max <- c(max,(2*r))
-  polar <- set_generation(k,(n + 1),new_min,new_max)
+  polar <- random_set_generation(k,(n + 1),new_min,new_max)
   new_points <- list()
   for (i in (1:k)) {
     polarx <- (polar[,i])
@@ -64,14 +64,4 @@ generate_for_sphere <- function(k,c,r,n, min, max) {
       print("Error in k points genration")
   }
   return (new_points)
-}
-
-set_generation <- function(set_size, n, min, max){
-  vector <- c()
-  for (i in (1:n)) {
-    row <- runif(set_size, min[i], max[i])
-    vector <-  c(vector, row)
-  }
-  matrix <- matrix(vector,nrow = n, ncol = set_size, byrow = TRUE)
-  return (matrix)
 }
