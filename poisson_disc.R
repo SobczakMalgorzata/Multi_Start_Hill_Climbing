@@ -42,7 +42,7 @@ poisson_disc <- function(n, sample_size, r, min, max, k=30){
       }
     }
   }
-  return(new_point_list)
+  return(matrix(unlist(new_point_list), ncol = n, byrow = TRUE)) 
 }
 
 generate_for_sphere <- function(k,c,r,n, min, max) {

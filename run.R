@@ -1,4 +1,3 @@
-
 run <- function(sample_size, n, r, min, max, function_number, initial_step_size, epsilon, max_iter, file_number = 0) {
   library("MASS")
   library("ppls")
@@ -21,6 +20,40 @@ run <- function(sample_size, n, r, min, max, function_number, initial_step_size,
   return (a)
 }
 
+runCECtest.Single <- function(n_starting_points = 10, n = 5, 
+                      min, max, 
+                      CEC_function_index = 1, 
+                      points_selection_method = "random", 
+                      poisson.r = 10, 
+                      hillclimb.initial_step_size, hillclimb.epsilon = 1e-04, hillclimb.max_iter = 5000, 
+                      logFileName){
+  if(points_selection_method == "random")
+  {starting_points = random_set_generation(n_starting_points, n, min, max)}
+  else if (points_selection_method == "hypergrid")
+  {starting_points = hypercube_generation(n_starting_points, n, rep(0,n), 0.1, min, max)} 
+  else if (points_selection_method == "poisson disk")
+  {starting_points = poisson_disc(n, n_starting_points, poisson.r, min, max)} 
+  
+  multi_start_hill_climbing(n, starting_points, CEC_function_index,
+                            hillclimb.initial_step_size, hillclimb.epsilon, hillclimb.max_iter)
+}
+
+runCECtest.All <- function(n_starting_points = 10, n = 5, 
+                           min, max, 
+                           points_selection_method = "random", 
+                           poisson.r = 10, 
+                           hillclimb.initial_step_size, hillclimb.epsilon = 1e-04, hillclimb.max_iter = 5000)
+{
+  
+  for (CEC_function_index in (1:28)) {
+    answer[CEC_function_index] <- runCECtest.Single(n_starting_points, n, 
+                                  min, max, 
+                                  CEC_function_index, 
+                                  points_selection_method, 
+                                  poisson.r, 
+                                  hillclimb.initial_step_size, hillclimb.epsilon = 1e-04, hillclimb.max_iter = 5000)
+  }
+}
 #min <- c(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
 n <- 2
 common_min <- -1000.0
@@ -36,13 +69,8 @@ max_iter <- 20000
 epsilon <- 0.1
 #file_number <- 1
 file_name <- "5_06/output_log.txt"
-sink(file_name)
-for (function_number in (1:28)) {
-  for(file_number in (1:1)){
-    answer <- run(sample_size,n,r,common_min,common_max, function_number, initial_step_size, epsilon, max_iter, file_number)
-    }
-}
-sink()
+
+
 #length(data) <- sample_size
 
 

@@ -43,7 +43,7 @@ multi_start_hill_climbing <- function(n, data, function_number, initial_step_siz
   
   a <- list()
   for(i in (1:(length(data)))) {
-    a[[i]] <- hill_climbing(n, data[[i]], function_number, initial_step_size, epsilon, max_iter, initial_acceleration)
+    a[[i]] <- hill_climbing(n, data[i,], function_number, initial_step_size, epsilon, max_iter, initial_acceleration)
   }
   return (a)
 }
