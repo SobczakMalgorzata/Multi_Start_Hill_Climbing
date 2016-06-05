@@ -9,38 +9,30 @@ hill_climbing <- function(n, starting_piont, function_number, initial_step_size,
   candidate[4] <- 1 / acceleration
   candidate[5] <- acceleration
   index = 0
-  before <- cec2013(function_number, current_point)
   while(index < max_iter){
-    mat = matrix(current_point, 5*n, n, byrow = T)
-    
+    before <- cec2013(function_number, current_point)
     for (i in (1:(length(current_point)))){
+      best <- -1
+      best_score <- -Inf
       for(j in (1:5)) {
-        mat[(i-1)*5+j] = mat[(i-1)+j] + step_size[i] * candidate[[j]]
+        current_point[i] = current_point[i] + step_size[i] * candidate[[j]]
+        temp = cec2013(function_number,current_point)
+        current_point[i] = current_point[i] - step_size[i] * candidate[[j]]
+        if(temp > best_score) {
+          best_score = temp
+          best = j
+        }
+      }
+      if (candidate[[best]] != 0) {
+        current_point[i] = current_point[i] + step_size[i] * candidate[[best]];
+        step_size[i] = step_size[i] * candidate[[best]]
       }
     }
-    scores = cec2013(function_number, mat)
-    
-    max_idx = which.max(scores)
-    current_point = mat[max_idx,]
-    best = (max_idx %% 5) + 1
-    step_size[best] = step_size[best] * candidate[[best]]
-    
-    condition <- scores[max_idx] - before
-    cat(paste("Index:",index))
-    cat("\n")
-    cat(paste("Point:", current_point[1:length(current_point)]))
-    cat("\n")
-    cat(paste("Difference:" ,condition, "Score:", scores[max_idx]))
-    cat("\n")
-    if ((condition < epsilon) | ((scores[max_idx] == Inf) & (before == Inf))){
+    condition <- (cec2013(function_number, current_point) - before)
+    if ((condition < epsilon) | ((cec2013(function_number, current_point)==Inf) & (before == Inf))){
       return(current_point)
-      #sink(file_name)
-      cat(paste("Index:",index,"Point:", current_point, "Difference:" ,condition))
-      cat("\n")
-      #sink()
     }
     index <- index + 1
-    before <- current_point
   }
   
   return(current_point)
@@ -51,11 +43,8 @@ multi_start_hill_climbing <- function(n, data, function_number, initial_step_siz
   
   a <- list()
   for(i in (1:(length(data)))) {
-    #sink(file_name)
-    cat(paste("Sample Index:",i))
-    cat("\n")
-    #sink()
     a[[i]] <- hill_climbing(n, data[[i]], function_number, initial_step_size, epsilon, max_iter, initial_acceleration)
   }
   return (a)
 }
+
