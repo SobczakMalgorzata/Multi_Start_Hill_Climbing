@@ -1,4 +1,4 @@
-hill_climbing <- function(n, starting_piont, function_number, initial_step_size, epsilon = 1, max_iter = 100, initial_acceleration=1.2) { #) {
+hill_climbing <- function(n, starting_piont, function_number, initial_step_size, epsilon = 0.0001, max_iter = 100, initial_acceleration=1.2) { #) {
   current_point <- starting_piont
   step_size <- initial_step_size
   acceleration <- initial_acceleration
@@ -20,14 +20,20 @@ hill_climbing <- function(n, starting_piont, function_number, initial_step_size,
     }
     scores = cec2013(function_number, mat)
     
-    max_idx = which.max(scores)
-    current_point = mat[max_idx]
+    max_idx = which.min(scores)
+    current_point = mat[max_idx,]
     best = (max_idx %% 5) + 1
     step_size[best] = step_size[best] * candidate[[best]]
     
-    condition <- (scores[max_idx] - before)
-    if ((condition < epsilon) | (scores[max_idx] == Inf) & (before == Inf)){
+    condition <- abs(scores[max_idx] - before)
+    #cat(paste("Index:",index,"Point:", current_point[1:length(current_point)], "Difference:" ,condition))
+    #cat("\n")
+    if ((condition < epsilon) | ((scores[max_idx] == Inf) & (before == Inf))){
       return(current_point)
+      #sink(file_name)
+      cat(paste("Index:",index,"Point:", current_point, "Difference:" ,condition))
+      cat("\n")
+      #sink()
     }
     index <- index + 1
     before <- current_point
@@ -37,10 +43,14 @@ hill_climbing <- function(n, starting_piont, function_number, initial_step_size,
 }
 
 
-multi_start_hill_climbing <- function(n, data, function_number, initial_step_size, epsilon = 1, max_iter = 100, initial_acceleration = 1.2){
+multi_start_hill_climbing <- function(n, data, function_number, initial_step_size, epsilon = 0.0001, max_iter = 100, initial_acceleration = 1.2){
   
   a <- list()
   for(i in (1:(length(data)))) {
+    #sink(file_name)
+    cat(paste("Sample Index:",i))
+    cat("\n")
+    #sink()
     a[[i]] <- hill_climbing(n, data[[i]], function_number, initial_step_size, epsilon, max_iter, initial_acceleration)
   }
   return (a)
