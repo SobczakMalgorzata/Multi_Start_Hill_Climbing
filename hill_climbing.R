@@ -20,14 +20,18 @@ hill_climbing <- function(n, starting_piont, function_number, initial_step_size,
     }
     scores = cec2013(function_number, mat)
     
-    max_idx = which.min(scores)
+    max_idx = which.max(scores)
     current_point = mat[max_idx,]
     best = (max_idx %% 5) + 1
     step_size[best] = step_size[best] * candidate[[best]]
     
-    condition <- abs(scores[max_idx] - before)
-    #cat(paste("Index:",index,"Point:", current_point[1:length(current_point)], "Difference:" ,condition))
-    #cat("\n")
+    condition <- scores[max_idx] - before
+    cat(paste("Index:",index))
+    cat("\n")
+    cat(paste("Point:", current_point[1:length(current_point)]))
+    cat("\n")
+    cat(paste("Difference:" ,condition, "Score:", scores[max_idx]))
+    cat("\n")
     if ((condition < epsilon) | ((scores[max_idx] == Inf) & (before == Inf))){
       return(current_point)
       #sink(file_name)

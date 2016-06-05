@@ -27,13 +27,13 @@ common_min <- -1000.0
 #max <- c(10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0,10.0)
 common_max <- 1000.0
 sample_size <- 30
-r <- 20
+r <- 50
 #function_number <- 1
 initial_step_size <- seq(1.0,1.0, length.out = n)
 initial_acceleration <- 1.2
-max_iter <- 2000000
+max_iter <- 20000
 #epsilon - our possible error
-epsilon <- 1
+epsilon <- 0.1
 #file_number <- 1
 file_name <- "5_06/output_log.txt"
 sink(file_name)
