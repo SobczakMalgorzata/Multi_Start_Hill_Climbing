@@ -2,6 +2,14 @@ list.of.packages <- c("ppls", "cec2013")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 
+library("MASS")
+library("ppls")
+library("cec2013")
+source('random_set_generation.R')
+source('hypercube_generation.R')
+source('poisson_disc.R')
+source('hill_climbing.R')
+
 runCECtest.Single <- function(n_starting_points = 10, n = 5, 
                       min, max, 
                       CEC_function_index = 1, 
@@ -16,9 +24,9 @@ runCECtest.Single <- function(n_starting_points = 10, n = 5,
   else if (points_selection_method == "poisson disk")
   {starting_points = poisson_disc(n, n_starting_points, poisson.r, rep(min,n), rep(max,n))} 
   
-  results <- multi_start_hill_climbing(n, starting_points, CEC_function_index,
-                                      hillclimb.initial_step_size, hillclimb.epsilon, hillclimb.max_iter)
-  write.csv2(results, file = logFileName, col.names = FALSE)
+  results <- t(simplify2array(multi_start_hill_climbing(n, starting_points, CEC_function_index,
+                                      hillclimb.initial_step_size, hillclimb.epsilon, hillclimb.max_iter)))
+  write.csv2(results, file = logFileName)
   return(results)
 }
 
@@ -29,13 +37,7 @@ runCECtest.All <- function(starting_points = 10, dimensions = c(2,5,10),
                            hillclimb.epsilon = 1e-04, hillclimb.max_iter = 5000,
                            attempts = 10, results_path = "")
 {
-  library("MASS")
-  library("ppls")
-  library("cec2013")
-  source('~/GitHub/Multi_Start_Hill_Climbing/random_set_generation.R')
-  source('~/GitHub/Multi_Start_Hill_Climbing/hypercube_generation.R')
-  source('~/GitHub/Multi_Start_Hill_Climbing/poisson_disc.R')
-  source('~/GitHub/Multi_Start_Hill_Climbing/hill_climbing.R')
+  
   answer <- list()
   for (n in dimensions) {
     for (attempt in (1:attempts)) {
