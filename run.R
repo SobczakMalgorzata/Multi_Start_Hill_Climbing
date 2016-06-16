@@ -45,7 +45,8 @@ runCECtest.All <- function(starting_points = 10, dimensions = c(2,5,10),
         for(CEC_function_index in (1:28)) {
           for(points_selection_method in c("random","poisson disk", "hypergrid")){
             logFileName <- sprintf("%sf%d_D%d_nStart%d_stepSize%f_epsilon%f_maxIter%d_%s_%d.csv", results_path,CEC_function_index,n, n_starting_points,hillclimb.initial_step_size,hillclimb.epsilon,hillclimb.max_iter,points_selection_method, attempt)
-            answer[CEC_function_index] <- runCECtest.Single(n_starting_points, n, 
+            #answer[CEC_function_index] <- 
+            runCECtest.Single(n_starting_points, n, 
                                           min, max, 
                                           CEC_function_index, 
                                           points_selection_method, 
