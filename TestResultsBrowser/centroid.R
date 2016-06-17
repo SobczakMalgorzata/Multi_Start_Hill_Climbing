@@ -1,10 +1,6 @@
-centroid <- function(result_points){
-  d <- length(result_points[,1])
-  l <- length(result_points[1,])
-  c <- vector(length = l)
-  for (i in (1:l)) 
-  {
-    c[i] <- sum(result_points[,i]/d)
-  }
+centroid <- function(mat){
+  d <- (length(mat[1,])-1)/2
+  l <- length(mat[,1])
+  c <- apply(mat[,((d+1):(2*d))], FUN = sum, MARGIN = 2)/l
   return (c)
 }
